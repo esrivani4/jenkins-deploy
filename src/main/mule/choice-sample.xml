@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="daf88f90-51e8-451b-a818-1cfa21474478" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="choice-sampleFlow" doc:id="1ca19647-6de1-4b02-aee7-f79f05a5f95a" >
+		<http:listener doc:name="Listener" doc:id="f3fd5caf-7944-4068-b9c7-2496dfc5c11f" config-ref="HTTP_Listener_config" path="/choice" allowedMethods="post"/>
+		<logger level="INFO" doc:name="Logger" doc:id="fcd63b95-a478-44d9-aca3-ff95cd9f7dea" message="##############before choice#########"/>
+		<choice doc:name="Choice" doc:id="7817b9f9-47ec-4f39-82c4-cc5f1c3c374c" >
+			<when expression="#[attributes.queryParams.branch == hyderabad]">
+				<logger level="INFO" doc:name="hyderabad" doc:id="3a5404b1-4fd6-4620-8ace-6d6bc8716c59" message="############ hyd branch #######"/>
+				<set-payload value='#["well come to hyderabad branch"]' doc:name="Set Payload" doc:id="659c69c8-0d89-45d9-8ca2-9c8bf04d257c" />
+			</when>
+			<when expression='#[attributes.queryParams.branch == "bangulor"]'>
+				<logger level="INFO" doc:name="bangulor" doc:id="14d979b8-7151-48cf-876f-f338cdd9a35b" message="####### bgl branch #########"/>
+				<set-payload value='#["well come to begulor branch"]' doc:name="Set Payload" doc:id="605c663c-14f5-45de-8878-d70b39226dc1" />
+			</when>
+			<when expression="#[attributes.queryParams.branch == chennai]">
+				<logger level="INFO" doc:name="chennai" doc:id="98036836-264c-4667-9eb2-344098b72734" message="########  chennai branch ########"/>
+				<set-payload value='#["well come to chennai branch"]' doc:name="Set Payload" doc:id="3de489e9-e089-4b2c-bdc4-180ec2a9b8d8" />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="e3277ec9-336b-4554-b3b5-1e1047fd4dc3" message='#["this is defult branch"]'/>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="b136963a-43ff-4d74-a0f7-24d3620e2fc7" message="######### after choice router ##########"/>
+	</flow>
+</mule>
